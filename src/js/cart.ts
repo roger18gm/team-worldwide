@@ -1,8 +1,13 @@
-import { getLocalStorage } from "./utils.mjs";
-import type { Product } from "./types.mjs";
+import { getLocalStorage } from "./utils.mts";
+import type { Product } from "./types.mts";
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
+  const storedCart = getLocalStorage("so-cart");
+  const cartItems: Product[] = Array.isArray(storedCart)
+    ? storedCart
+    : storedCart
+      ? [storedCart as Product]
+      : [];
   const htmlItems = cartItems.map((item: Product) => cartItemTemplate(item));
   const listEl = document.querySelector(".product-list");
   if (listEl) listEl.innerHTML = htmlItems.join("");
@@ -12,7 +17,7 @@ function cartItemTemplate(item: Product) {
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
     <img
-      src="${item.image}"
+      src="${item.image.replace("../", "/")}"
       alt="${item.name}"
     />
   </a>
