@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const title = "My Cart";
+---
+
+<Layout title={title}>
+  <main class="divider">
+    <section class="product-detail">
+      <h3>My Cart</h3>
+      <div class="product-list"></div>
+    </section>
+  </main>
+  <script src="../../js/cart.ts"></script>
+</Layout>
