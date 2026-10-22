@@ -14,7 +14,10 @@
     "format": "prettier --plugin=prettier-plugin-astro --ignore-path ./.gitignore --write \"./src/**/*.{astro,html,json,js,ts,css}\""
   },
   "dependencies": {
-    "astro": "^7.3.5"
+    "@astrojs/svelte": "^9.1.1",
+    "astro": "^7.3.5",
+    "svelte": "^5.57.2",
+    "typescript": "^6.0.3"
   },
   "allowScripts": {
     "esbuild": true

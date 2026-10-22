@@ -1,13 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import ProductList from "../../components/ProductList.svelte";
 
 const title = "Product List";
 ---
 
 <Layout title={title}>
-    <main>
-        <h1>Header</h1>
-        <p>Page content goes here.</p>
-        <footer></footer>
+  <main class="products">
+    <ProductList client:load />
   </main>
 </Layout>
