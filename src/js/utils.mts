@@ -41,3 +41,8 @@ export function openUserMenu(selector:string) {
     });
   });
 }
+
+export function getParam(param:string){
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
