@@ -10,8 +10,9 @@ function convertToJson(res: Response) {
   }
 }
 
-export function getData(category = "tents") {
-  return fetch(`/json/${category}.json`)
+// Fetch products from the API filtered by category (Phase 03)
+export function getProducts(category = "tents") {
+  return fetch(`${baseURL}products?category=${category}`)
     .then(convertToJson)
     .then((data) => data);
 }
