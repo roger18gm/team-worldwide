@@ -1,14 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import "../../css/style.css";
+import ProductList from "../../components/ProductList.svelte";
 
 const title = "Product List";
 ---
 
 <Layout title={title}>
   <main class="divider">
-    <h2>Product List Page</h2>
-    <!-- We will mount the component here later -->
+    <!-- Mount the component and hydrate it so it can run browser logic -->
+    <ProductList client:load />
   </main>
 </Layout>
 
