@@ -1,35 +1,23 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, z } from "astro:content";
+import { glob, file } from "astro/loaders"; // Not available with legacy API
+
+// we can also create collections that load from markdown files...this is an example of how to do that.
+// const posts = defineCollection({
+//   loader: glob({ pattern: "**/*.md", base: "./src/content/blog" })
+// });
+// load our product info from the tents.json file
+// const products = defineCollection({
+//   loader: file("public/json/tents.json"),
+// });
 
 const products = defineCollection({
   loader: async () => {
-    // Get the base URL from the environment variable
-    let baseUrl = import.meta.env.PUBLIC_SERVER_URL;
-
-    // 1. Ensure the URL ends with a slash
-    if (!baseUrl.endsWith("/")) {
-      baseUrl += "/";
-    }
-
-    // 2. Ensure the URL includes the API path (in case Netlify only has the domain)
-    if (!baseUrl.includes("/api/v1/")) {
-       baseUrl += "api/v1/";
-    }
-
-    const fullUrl = baseUrl + "products?limit=200";
-
-    try {
-      const response = await fetch(fullUrl);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      return data.results;
-    } catch {
-      // If the API fails or is asleep, return an empty array to prevent the build from crashing
-      return [];
-    }
+    const response = await fetch(
+      import.meta.env.PUBLIC_SERVER_URL + "products?limit=200"
+    );
+    const data = await response.json();
+    // Must return an array of entries with an id property, or an object with IDs as keys and entries as values
+    return data.results;
   },
 });
 
