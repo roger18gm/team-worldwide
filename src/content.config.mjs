@@ -1,14 +1,27 @@
 import { defineCollection } from "astro:content";
-import { glob, file } from "astro/loaders"; // Not available with legacy API
 
-// we can also create collections that load from markdown files in a directory...this is an example of how to do that.
-// const posts = defineCollection({
-//   loader: glob({ pattern: "**/*.md", base: "./src/content/blog" })
-// });
-
-// load our product info from the tents.json file
 const products = defineCollection({
-  loader: file("public/json/tents.json")
+  loader: async () => {
+    let baseUrl = import.meta.env.PUBLIC_SERVER_URL;
+
+    // Automatically add the missing slash if it's not there
+    if (!baseUrl.endsWith("/")) {
+      baseUrl += "/";
+    }
+
+    // Construct the correct URL
+    const fullUrl = baseUrl + "products?limit=200";
+
+    try {
+      const response = await fetch(fullUrl);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      return data.results;
+    } catch {
+      // Prevent build from crashing if API is asleep
+      return [];
+    }
+  },
 });
 
 export const collections = { products };

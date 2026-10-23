@@ -1,0 +1,16 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductList from "../../components/ProductList.svelte";
+
+const title = "Product List";
+---
+
+<Layout title={title}>
+  <main class="divider">
+    <!-- Mount the component and hydrate it so it can run browser logic -->
+    <ProductList client:load />
+  </main>
+</Layout>
+
+
+  
