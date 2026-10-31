@@ -16,6 +16,11 @@ type Props = CollectionEntry<"products">;
 // get the product data from the props to use in the template below. The actual data is in product.data
 const product = Astro.props;
 const title = product.data.name;
+// check if the product has a discount and calculate the discount percentage if it does
+const hasDiscount = product.data.suggestedRetailPrice > product.data.finalPrice;
+const discountPercent = hasDiscount 
+  ? Math.round((1 - (product.data.finalPrice / product.data.suggestedRetailPrice)) * 100) 
+  : 0;
 ---
 
 <Layout title={title}>
@@ -32,7 +37,13 @@ const title = product.data.name;
         alt={product.data.name}
       />
 
-      <p class="product-card__price">${product.data.finalPrice}</p>
+    <div class="price-container">
+    {hasDiscount && (
+    <span class="badge-discount">Save {discountPercent}%</span>
+    <span class="original-price"><s>${product.data.suggestedRetailPrice}</s></span>
+  )}
+    <span class="final-price">${product.data.finalPrice}</span>
+    </div>
 
       <p class="product__color">{product.data.colors[0].colorName}</p>
 
@@ -49,3 +60,29 @@ const title = product.data.name;
     </section>
   </main>
 </Layout>
+<style>
+  .price-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    margin: 15px 0;
+  }
+  .badge-discount {
+    background-color: #e63946; 
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .original-price {
+    color: #888;
+    font-size: 1rem;
+    text-decoration: line-through; 
+  }
+  .final-price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2a9d8f; 
+  }
+</style>
