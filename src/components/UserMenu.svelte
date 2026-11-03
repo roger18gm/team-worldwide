@@ -1,37 +1,32 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   let visible = $state(false);
 
-  function openUserMenu(e: MouseEvent) {
-    // Stop the click from reaching the window listener immediately
-    e.stopPropagation();
+  function toggleMenu() {
+    // We no longer need e.stopPropagation() because we use 'capture' in the listener
     visible = !visible;
   }
 
-  // Named function required for removal
   function closeMenu() {
     visible = false;
   }
 
-  // Named function required for removal
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === "Escape") {
       closeMenu();
     }
   }
 
-  onMount(() => {
-    // 1. Add Listeners
-    // if the user clicks outside the menu, scrolls the page, or hits the `esc` key close the menu.
-    window.addEventListener("click", closeMenu);
+  // $effect is the modern Svelte 5 way to handle side effects and cleanup
+  $effect(() => {
+    // We pass 'true' as the third argument to use the capture phase.
+    // This intercepts the click before it reaches the button, preventing the open/close loop.
+    window.addEventListener("click", closeMenu, true);
     window.addEventListener("scroll", closeMenu);
     window.addEventListener("keydown", handleKeydown);
 
-    // 2. Return Cleanup Function
-    // Svelte runs this function automatically when the component unmounts
+    // The cleanup function runs automatically when the component unmounts
     return () => {
-      window.removeEventListener("click", closeMenu);
+      window.removeEventListener("click", closeMenu, true);
       window.removeEventListener("scroll", closeMenu);
       window.removeEventListener("keydown", handleKeydown);
     };
@@ -39,11 +34,12 @@
 </script>
 
 <div class="user">
+  <!-- Call toggleMenu without the event -->
   <button
     class="user__button"
     aria-label="user management"
     title="User Management"
-    onclick={openUserMenu}
+    onclick={toggleMenu}
   >
     <img src="/images/noun-hiker.svg" alt="user icon" />
   </button>
@@ -59,5 +55,38 @@
   .user {
     display: flex;
     align-items: flex-end;
+    position: relative; /* Required to position the dropdown menu */
+  }
+  
+  /* Styles for the dropdown menu */
+  .user__menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-direction: column;
+    min-width: 150px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 100;
+    padding: 5px 0;
+  }
+
+  /* When the .open class is present, we show the menu */
+  .user__menu.open {
+    display: flex;
+  }
+
+  .user__menu a {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    display: block;
+  }
+
+  .user__menu a:hover {
+    background-color: #f0f0f0;
   }
 </style>
