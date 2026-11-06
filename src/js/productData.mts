@@ -17,7 +17,18 @@ export function getProducts(category = "tents") {
 }
 
 export async function findProductById(id: string) {
-  const response = await fetch(baseURL + `products/${id}`);
-  const product = (await convertToJson(response)) as Product;
-  return product;
+  try {
+    const response = await fetch(baseURL + `products/${id}`);
+    
+    // If the response is not ok (e.g., 404), return null instead of throwing an error
+    if (!response.ok) {
+      return null;
+    }
+    
+    const product = (await response.json()) as Product;
+    return product;
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return null;
+  }
 }

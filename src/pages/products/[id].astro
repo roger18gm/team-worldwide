@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { type CollectionEntry, getCollection } from "astro:content";
+import NotFound from "../../components/NotFound.svelte";
 
 // map though all products to create a page for each one
 export async function getStaticPaths() {
@@ -15,9 +16,15 @@ type Props = CollectionEntry<"products">;
 
 // get the product data from the props to use in the template below. The actual data is in product.data
 const product = Astro.props;
-const title = product.data.name;
+
+// check if the product exists to handle the error case
+const hasError = !product || !product.data;
+
+// if there is an error, set the title to "Product Not Found", otherwise use the product's name
+const title = hasError ? "Product Not Found" : product.data.name;
+
 // check if the product has a discount and calculate the discount percentage if it does
-const hasDiscount = product.data.suggestedRetailPrice > product.data.finalPrice;
+const hasDiscount = !hasError && product.data.suggestedRetailPrice > product.data.finalPrice;
 const discountPercent = hasDiscount 
   ? Math.round((1 - (product.data.finalPrice / product.data.suggestedRetailPrice)) * 100) 
   : 0;
@@ -26,40 +33,49 @@ const discountPercent = hasDiscount
 <Layout title={title}>
   <script src="../../js/product.ts"></script>
   <main class="divider">
-    <section class="product-detail">
-      <h3>{product.data.brand.name}</h3>
-
-      <h2 class="divider">{product.data.nameWithoutBrand}</h2>
-
-      <img
-        class="divider"
-        src={product.data.images.primaryLarge}
-        alt={product.data.name}
+    {hasError ? (
+      <NotFound 
+        client:load 
+        title="Product Not Found" 
+        message="Sorry, we couldn't find the product you're looking for." 
       />
+    ) : (
+      <section class="product-detail">
+        <h3>{product.data.brand.name}</h3>
 
-    <div class="price-container">
-    {hasDiscount && (
-    <span class="badge-discount">Save {discountPercent}%</span>
-    <span class="original-price"><s>${product.data.suggestedRetailPrice}</s></span>
-  )}
-    <span class="final-price">${product.data.finalPrice}</span>
-    </div>
+        <h2 class="divider">{product.data.nameWithoutBrand}</h2>
 
-      <p class="product__color">{product.data.colors[0].colorName}</p>
+        <img
+          class="divider"
+          src={product.data.images.primaryLarge}
+          alt={product.data.name}
+        />
 
-      <p
-        class="product__description"
-        set:html={product.data.descriptionHtmlSimple}
-      />
+        <div class="price-container">
+          {hasDiscount && (
+            <span class="badge-discount">Save {discountPercent}%</span>
+            <span class="original-price"><s>${product.data.suggestedRetailPrice}</s></span>
+          )}
+          <span class="final-price">${product.data.finalPrice}</span>
+        </div>
 
-      <div class="product-detail__add">
-        <button id="addToCart" data-id={product.data.id}>
-          Add to Cart
-        </button>
-      </div>
-    </section>
+        <p class="product__color">{product.data.colors[0].colorName}</p>
+
+        <p
+          class="product__description"
+          set:html={product.data.descriptionHtmlSimple}
+        />
+
+        <div class="product-detail__add">
+          <button id="addToCart" data-id={product.data.id}>
+            Add to Cart
+          </button>
+        </div>
+      </section>
+    )}
   </main>
 </Layout>
+
 <style>
   .price-container {
     display: flex;

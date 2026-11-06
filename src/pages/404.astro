@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+import NotFound from "../components/NotFound.svelte";
+
+const title = "Page Not Found";
+---
+
+<Layout title={title}>
+  <main class="divider">
+    <NotFound client:load />
+  </main>
+</Layout>
