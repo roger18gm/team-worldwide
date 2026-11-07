@@ -28,10 +28,14 @@ const hasDiscount = !hasError && product.data.suggestedRetailPrice > product.dat
 const discountPercent = hasDiscount 
   ? Math.round((1 - (product.data.finalPrice / product.data.suggestedRetailPrice)) * 100) 
   : 0;
+
+const extraImages = product.data.images.extraImages ?? [];
+const hasExtraImages = extraImages.length > 0;
 ---
 
 <Layout title={title}>
   <script src="../../js/product.ts"></script>
+  {hasExtraImages && <script src="../../js/productCarousel.ts"></script>}
   <main class="divider">
     {hasError ? (
       <NotFound 
@@ -45,11 +49,68 @@ const discountPercent = hasDiscount
 
         <h2 class="divider">{product.data.nameWithoutBrand}</h2>
 
-        <img
-          class="divider"
-          src={product.data.images.primaryLarge}
-          alt={product.data.name}
-        />
+        {hasExtraImages ? (
+          <div class="product-gallery" data-product-gallery>  
+            <div class="product-gallery__main">
+              <button
+                class="product-gallery__arrow product-gallery__arrow--previous"
+                type="button"
+                aria-label="Show previous product image"
+                data-gallery-previous
+              >
+                &#8249;
+              </button>
+              <img
+                class="product-gallery__image"
+                src={product.data.images.primaryLarge}
+                alt={product.data.name}
+                data-gallery-image
+              />
+              <button
+                class="product-gallery__arrow product-gallery__arrow--next"
+                type="button"
+                aria-label="Show next product image"
+                data-gallery-next
+              >
+                &#8250;
+              </button>
+            </div>
+
+            <div class="product-gallery__options" role="list" aria-label="Product images">
+              <button
+                class="product-gallery__option product-gallery__option--active"
+                type="button"
+                role="listitem"
+                aria-label={`View ${product.data.name} main image`}
+                aria-current="true"
+                data-gallery-option
+                data-image-src={product.data.images.primaryLarge}
+                data-image-alt={product.data.name}
+              >
+                <img src={product.data.images.primaryLarge} alt="" aria-hidden="true" />
+              </button>
+              {extraImages.map((image, index: number) => (
+                <button
+                  class="product-gallery__option"
+                  type="button"
+                  role="listitem"
+                  aria-label={`View ${image.title || `product image ${index + 2}`}`}
+                  data-gallery-option
+                  data-image-src={image.src}
+                  data-image-alt={image.title || product.data.name}
+                >
+                  <img src={image.src} alt="" aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <img
+            class="divider"
+            src={product.data.images.primaryLarge}
+            alt={product.data.name}
+          />
+        )}
 
         <div class="price-container">
           {hasDiscount && (
@@ -100,5 +161,80 @@ const discountPercent = hasDiscount
     font-size: 1.4rem;
     font-weight: bold;
     color: #2a9d8f; 
+  }
+
+  .product-gallery {
+    margin-bottom: 1rem;
+  }
+
+  .product-gallery__main {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-gallery__image {
+    display: block;
+    width: 100%;
+  }
+
+  .product-gallery__arrow {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    border: 0;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    background: rgb(0 0 0 / 65%);
+    color: white;
+    cursor: pointer;
+    font-size: 1.75rem;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .product-gallery__arrow:hover,
+  .product-gallery__arrow:focus-visible {
+    background: rgb(0 0 0 / 85%);
+  }
+
+  .product-gallery__arrow--previous {
+    left: 0.75rem;
+  }
+
+  .product-gallery__arrow--next {
+    right: 0.75rem;
+  }
+
+  .product-gallery__options {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    overflow-x: auto;
+    padding: 0.15rem;
+  }
+
+  .product-gallery__option {
+    flex: 0 0 4.5rem;
+    border: 2px solid transparent;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .product-gallery__option--active,
+  .product-gallery__option:focus-visible {
+    border-color: var(--tertiary-color);
+  }
+
+  .product-gallery__option img {
+    display: block;
+    aspect-ratio: 1;
+    width: 100%;
+    object-fit: cover;
   }
 </style>
