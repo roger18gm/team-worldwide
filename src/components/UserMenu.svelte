@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { logout, userStore } from "../js/auth.svelte";
+
   let visible = $state(false);
 
   function toggleMenu() {
@@ -43,11 +45,15 @@
   >
     <img src="/images/noun-hiker.svg" alt="user icon" />
   </button>
-  
+
   <nav class="user__menu" class:open={visible}>
-    <a href="/login">Login</a>
-    <a href="/profile">Profile</a>
-    <a href="/orders">Orders</a>
+    {#if userStore.isLoggedIn}
+      <a onclick={logout}>Logout</a>
+      <a href="/profile">Profile</a>
+      <a href="/orders">Orders</a>
+    {:else}
+      <a href="/login">Login</a>
+    {/if}
   </nav>
 </div>
 
@@ -57,7 +63,7 @@
     align-items: flex-end;
     position: relative; /* Required to position the dropdown menu */
   }
-  
+
   /* Styles for the dropdown menu */
   .user__menu {
     display: none; /* Hidden by default */
@@ -69,7 +75,7 @@
     border-radius: 4px;
     flex-direction: column;
     min-width: 150px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 100;
     padding: 5px 0;
   }
