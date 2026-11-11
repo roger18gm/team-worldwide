@@ -51,6 +51,7 @@
       <a onclick={logout}>Logout</a>
       <a href="/profile">Profile</a>
       <a href="/orders">Orders</a>
+      <a href="/wishlist">Wishlist</a>
     {:else}
       <a href="/login">Login</a>
     {/if}
@@ -58,6 +59,10 @@
 </div>
 
 <style>
+  a {
+    width: 100%;
+    cursor: pointer;
+  }
   .user {
     display: flex;
     align-items: flex-end;
