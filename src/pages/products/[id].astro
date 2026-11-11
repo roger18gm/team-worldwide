@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { type CollectionEntry, getCollection } from "astro:content";
 import NotFound from "../../components/NotFound.svelte";
+import WishlistButton from "../../components/WishlistButton.svelte";
 
 // map though all products to create a page for each one
 export async function getStaticPaths() {
@@ -131,6 +132,7 @@ const hasExtraImages = extraImages.length > 0;
           <button id="addToCart" data-id={product.data.id}>
             Add to Cart
           </button>
+          <WishlistButton productId={product.data.id} client:load />
         </div>
       </section>
     )}
