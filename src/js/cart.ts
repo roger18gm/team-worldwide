@@ -8,9 +8,21 @@ function renderCartContents() {
     : storedCart
       ? [storedCart as Product]
       : [];
-  const htmlItems = cartItems.map((item: Product) => cartItemTemplate(item));
+
   const listEl = document.querySelector(".product-list");
-  if (listEl) listEl.innerHTML = htmlItems.join("");
+  if (!listEl) return;
+
+  // Check if the cart is empty to prevent rendering errors
+  if (cartItems.length === 0) {
+    listEl.innerHTML = `<li class="cart-card" style="text-align: center; padding: 20px; font-size: 1.2rem;">
+      Your cart is currently empty.
+    </li>`;
+    return; 
+  }
+
+  // If there are items, render them normally
+  const htmlItems = cartItems.map((item: Product) => cartItemTemplate(item));
+  listEl.innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item: Product) {
