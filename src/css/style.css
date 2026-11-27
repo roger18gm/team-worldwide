@@ -364,7 +364,9 @@ footer {
   font-size: var(--small-font);
   color: var(--dark-grey);
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .sort-controls select:hover {
@@ -384,4 +386,38 @@ footer {
     align-items: flex-start;
     gap: 0.5em;
   }
+}
+
+/* Breadcrumbs styles */
+.breadcrumbs {
+  padding: 0.5em 1em;
+  font-size: var(--small-font);
+  color: var(--dark-grey);
+}
+.breadcrumbs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.breadcrumbs li {
+  display: flex;
+  align-items: center;
+}
+.breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  margin-left: 0.5em;
+  color: var(--light-grey);
+}
+.breadcrumbs a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+.breadcrumbs span {
+  font-weight: bold;
 }
