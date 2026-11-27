@@ -61,6 +61,9 @@ function removeFromCart(id: string) {
   // Save the new cart back to localStorage
   setLocalStorage("so-cart", updatedCart);
 
+  // --- FIX: Dispatch the event so the Header updates the badge count ---
+  document.dispatchEvent(new CustomEvent("cartUpdated"));
+
   // Re-render the list so the removed item disappears
   renderCartContents();
 }
