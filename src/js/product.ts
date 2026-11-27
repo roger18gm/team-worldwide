@@ -10,13 +10,23 @@ function addProductToCart(product: Product) {
       ? [storedCart as Product]
       : [];
   setLocalStorage("so-cart", [...cartItems, product]);
+  
+  // Dispatch event to trigger the header animation and update count
+  document.dispatchEvent(new CustomEvent("cartUpdated"));
 }
+
 // add to cart button event handler
 async function addToCartHandler(e: Event) {
   const target = e.target as HTMLButtonElement;
   if (target.dataset.id) {
     const product = await findProductById(target.dataset.id);
-    addProductToCart(product);
+    
+    // --- FIX: Check if the product exists before adding it to the cart ---
+    if (product) {
+      addProductToCart(product);
+    } else {
+      console.error("Product not found");
+    }
   }
 }
 
