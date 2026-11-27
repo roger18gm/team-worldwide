@@ -8,7 +8,7 @@ function renderCartContents() {
     : storedCart
       ? [storedCart as Product]
       : [];
-      
+
   const listEl = document.querySelector(".product-list");
   if (!listEl) return;
 
@@ -57,10 +57,10 @@ function removeFromCart(id: string) {
 
   // Filter out the item that matches the ID
   const updatedCart = cartItems.filter((item) => item.id !== id);
-  
+
   // Save the new cart back to localStorage
   setLocalStorage("so-cart", updatedCart);
-  
+
   // Re-render the list so the removed item disappears
   renderCartContents();
 }
@@ -68,7 +68,7 @@ function removeFromCart(id: string) {
 // Event Delegation: Listen for clicks on the document
 document.addEventListener("click", (event) => {
   const target = event.target as HTMLElement;
-  
+
   // If the clicked element has the class 'remove-item'
   if (target.classList.contains("remove-item")) {
     const productId = target.getAttribute("data-id");

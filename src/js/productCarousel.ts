@@ -5,7 +5,9 @@ if (gallery) {
   const options = Array.from(
     gallery.querySelectorAll<HTMLButtonElement>("[data-gallery-option]"),
   );
-  const previous = gallery.querySelector<HTMLButtonElement>("[data-gallery-previous]");
+  const previous = gallery.querySelector<HTMLButtonElement>(
+    "[data-gallery-previous]",
+  );
   const next = gallery.querySelector<HTMLButtonElement>("[data-gallery-next]");
 
   let selectedIndex = 0;
